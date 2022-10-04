@@ -1,0 +1,7 @@
+let s = Empty;
+let sa = Empty;
+sa.Push(1);
+s.Push(2);
+s.Pop();
+s.Push(42);
+Merge(s,sa);
