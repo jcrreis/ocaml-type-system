@@ -11,13 +11,16 @@
 
 //values
   %token  <int> INT
- %token <string> ID
-
+  %token <string> ID
+  %token <string> STRING
 //OPS
-%token EMPTY
-%token PUSH
-%token POP
-%token MERGE
+%token ADD
+%token TIMES
+%token CAT
+%token LEN
+// %token PUSH
+// %token POP
+// %token MERGE
 
 //Syntax
 %token COMMA
@@ -41,8 +44,9 @@ prog :
 
 
 expr:
-    | LET s = ID EQUALS EMPTY SEMICOLON { Let (s, Empty) }   //1st case
-    | s = ID DOT PUSH LPAREN v = INT RPAREN SEMICOLON { Push(v, s) } //2nd case
-    | s = ID DOT POP LPAREN RPAREN SEMICOLON { Pop(s) } //3rd case
-    | MERGE LPAREN s1 = ID COMMA s2 = ID RPAREN SEMICOLON { Merge(s1, s2) } //4th case
+    | ADD LPAREN v1 = INT COMMA v2 = INT RPAREN SEMICOLON { Plus (v1, v2) }   //1st case
+    | TIMES LPAREN v1 = INT COMMA v2 = INT RPAREN SEMICOLON { Times (v1, v2) }  
+    | CAT LPAREN s1 = STRING COMMA s2 = STRING RPAREN SEMICOLON { Cat (s1, s2) }
+    | LEN LPAREN s = STRING RPAREN SEMICOLON { Len (s) }
+    
 ;

@@ -37,9 +37,19 @@ let print_position lexbuf =
   Format.eprintf "%s:%d:%d" pos.pos_fname
     pos.pos_lnum (pos.pos_cnum - pos.pos_bol + 1)
 
-let pp_stack s v =
+(* let pp_stack s v =
   Format.eprintf "%s ---> " s;
   List.iter (fun e -> Format.eprintf "%d; " e) v;
+  Format.eprintf "@." *)
+
+let pp_stack_int s v =
+  Format.eprintf "%s ---> " s;
+  Format.eprintf "%d; " v;
+  Format.eprintf "@."
+
+let pp_stack_str s v =
+  Format.eprintf "%s ---> " s;
+  Format.eprintf "%s; " v;
   Format.eprintf "@."
 
 let () =
@@ -47,9 +57,11 @@ let () =
   let lexbuf = Lexing.from_channel cin in
   try
     let program = Parser.prog Lexer.read lexbuf in
-    let mem = Hashtbl.create 64 in
-    Stacks.eval_program mem program;
-    Hashtbl.iter pp_stack mem
+    let mem_int = Hashtbl.create 64 in
+    let mem_str = Hashtbl.create 64 in
+    Stacks.eval_program mem_int mem_str program;
+    Hashtbl.iter pp_stack_int mem_int; 
+    Hashtbl.iter pp_stack_str mem_str
   with Parser.Error ->
     Format.eprintf "Syntax error@.";
     print_position lexbuf;

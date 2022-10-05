@@ -1,6 +1,7 @@
 {
   open Parser
   open Lexing
+  exception SyntaxError of string
 
   let newline lexbuf =
     let pos = lexbuf.lex_curr_p in
@@ -12,17 +13,17 @@
 let white = [' ' '\t']+
 let digit = ['0'-'9']
 let int = '-'? digit+
-let id = ['a'-'z']+
-let string = []
+let id = ['a'-'z' 'A'-'Z' '_'] ['a'-'z' 'A'-'Z' '0'-'9' '_']*
 
 rule read =
   parse
-  | '\n' { newline lexbuf; read lexbuf }
+    | '\n' { newline lexbuf; read lexbuf }
     | white { read lexbuf }
-    | "Empty" { EMPTY }
-    | "Push"  { PUSH }
-    | "Pop"   { POP }
-    | "Merge" { MERGE }
+    | "Add" { ADD }
+    | "Times" { TIMES }
+    | "Cat"   { CAT }
+    | "Len"   { LEN }
+    | '"'      { read_string (Buffer.create 17) lexbuf }
     | ";"     { SEMICOLON }
     | ","     { COMMA }
     | "("     { LPAREN }
